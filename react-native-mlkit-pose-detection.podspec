@@ -16,6 +16,6 @@ Pod::Spec.new do |s|
   s.source_files = "ios/**/*.{h,m,mm}", "cpp/**/*.{h,cpp}"
 
   s.dependency "React-Core"
-  s.dependency 'GoogleMLKit/PoseDetection', '2.5.0'
-  s.dependency 'GoogleMLKit/PoseDetectionAccurate', '2.5.0'
+  s.dependency 'GoogleMLKit/PoseDetection', '3.2.0'
+  s.dependency 'GoogleMLKit/PoseDetectionAccurate', '3.2.0'
 end
