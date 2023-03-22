@@ -18,7 +18,7 @@ class CallInvoker;
 }
 
 namespace SKRNMLKitPoseDetection {
-  int multiply(float a, float b);
+//   int multiply(float a, float b);
 
 class Point3D {
 public:

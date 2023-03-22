@@ -7,6 +7,7 @@ add_library(cpp
             SHARED
             ../cpp/react-native-mlkit-pose-detection.cpp
             cpp-adapter.cpp
+            ../../../node_modules/react-native/ReactCommon/jsi/jsi/jsi.cpp
 )
 
 # Specifies a path to native header files.
