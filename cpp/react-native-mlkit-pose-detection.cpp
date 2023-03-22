@@ -28,7 +28,6 @@ jsi::Object SKRNMLKitPoseDetectionMLKPoseLandmark::toJSIObject(facebook::jsi::Ru
 
 facebook::jsi::Value SKRNMLKitPoseDetectionMLKPose::get(facebook::jsi::Runtime &runtime, const facebook::jsi::PropNameID &name) {
     std::string methodName = name.utf8(runtime);
-    switch (methodSwitch) {
     if (methodName == "landmarks") {
         return jsi::Function::createFromHostFunction
         (runtime, name, 0, [&](jsi::Runtime &runtime, const jsi::Value &thisValue, const jsi::Value *arguments, size_t count) -> jsi::Value
@@ -54,6 +53,7 @@ facebook::jsi::Value SKRNMLKitPoseDetectionMLKPose::get(facebook::jsi::Runtime &
 
     return jsi::Value::undefined();
 }
+
 static std::vector<std::string> nativeMLKPoseHostObjectKeys = {
     "landmarks",
     "landmarkOfType",
