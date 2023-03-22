@@ -15,4 +15,5 @@ include_directories(
             ../../../node_modules/react-native/React
             ../../../node_modules/react-native/React/Base
             ../../../node_modules/react-native/ReactCommon/jsi
+            ../../../node_modules/react-native/ReactCommon/callinvoker
 )
