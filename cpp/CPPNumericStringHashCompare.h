@@ -8,19 +8,22 @@
 #ifndef CPPNumericStringHashCompare_hpp
 #define CPPNumericStringHashCompare_hpp
 
-#include <stdio.h>
+#include <string_view>
+#include <iostream>
+#include <string>
+
 // String hash switch case implementation as seen here
 // https://learnmoderncpp.com/2020/06/01/strings-as-switch-case-labels/
-constexpr inline unsigned long long string_hash(const char *s) {
-    unsigned long long hash{}, c{};
-    for (auto p = s; *p; ++p, ++c) {
-        hash += *p << c;
+inline constexpr auto hash_djb2a(const std::string_view sv) {
+    unsigned long hash{ 5381 };
+    for (unsigned char c : sv) {
+        hash = ((hash << 5) + hash) ^ c;
     }
     return hash;
 }
-
-constexpr inline unsigned long long operator"" _sh(const char *s, size_t) {
-    return string_hash(s);
+ 
+inline constexpr auto operator"" _sh(const char *str, size_t len) {
+    return hash_djb2a(std::string_view{ str, len });
 }
 
 #endif /* CPPNumericStringHashCompare_hpp */
