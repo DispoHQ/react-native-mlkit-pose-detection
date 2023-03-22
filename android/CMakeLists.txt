@@ -12,4 +12,7 @@ add_library(cpp
 # Specifies a path to native header files.
 include_directories(
             ../cpp
+            ../../../node_modules/react-native/React
+            ../../../node_modules/react-native/React/Base
+            ../../../node_modules/react-native/ReactCommon/jsi
 )
