@@ -3,7 +3,6 @@
 #include <map>
 #include <string>
 #include <ReactCommon/CallInvoker.h>
-#include "CPPNumericStringHashCompare.h"
 #include <sstream>
 
 using namespace facebook;
@@ -29,31 +28,30 @@ jsi::Object SKRNMLKitPoseDetectionMLKPoseLandmark::toJSIObject(facebook::jsi::Ru
 
 facebook::jsi::Value SKRNMLKitPoseDetectionMLKPose::get(facebook::jsi::Runtime &runtime, const facebook::jsi::PropNameID &name) {
     std::string methodName = name.utf8(runtime);
-    long long methodSwitch = string_hash(methodName.c_str());
     switch (methodSwitch) {
-        case "landmarks"_sh:{
-            return jsi::Function::createFromHostFunction
-            (runtime, name, 0, [&](jsi::Runtime &runtime, const jsi::Value &thisValue, const jsi::Value *arguments, size_t count) -> jsi::Value
-             {
-                std::vector<SKRNMLKitPoseDetectionMLKPoseLandmark> lm = landmarks();
-                jsi::Array ret = jsi::Array(runtime, lm.size());
-                for(int i = 0; i < lm.size(); i++) {
-                    ret.setValueAtIndex(runtime, i, lm[i].toJSIObject(runtime));
-                }
-                return ret;
-            });
-        } break;
-        case "landmarkOfType"_sh:{
-            return jsi::Function::createFromHostFunction
-            (runtime, name, 1, [&](jsi::Runtime &runtime, const jsi::Value &thisValue, const jsi::Value *arguments, size_t count) -> jsi::Value
-             {
-                if(count < 1) return jsi::Value::undefined();
-                std::string landmarkType = arguments[0].asString(runtime).utf8(runtime);
-                return landmarkOfType(landmarkType).toJSIObject(runtime);
-            });
-        } break;
-        default: return jsi::Value::undefined();
+    if (methodName == "landmarks") {
+        return jsi::Function::createFromHostFunction
+        (runtime, name, 0, [&](jsi::Runtime &runtime, const jsi::Value &thisValue, const jsi::Value *arguments, size_t count) -> jsi::Value
+            {
+            std::vector<SKRNMLKitPoseDetectionMLKPoseLandmark> lm = landmarks();
+            jsi::Array ret = jsi::Array(runtime, lm.size());
+            for(int i = 0; i < lm.size(); i++) {
+                ret.setValueAtIndex(runtime, i, lm[i].toJSIObject(runtime));
+            }
+            return ret;
+        });
     }
+    
+    if (methodName == "landmarkOfType") {
+        return jsi::Function::createFromHostFunction
+        (runtime, name, 1, [&](jsi::Runtime &runtime, const jsi::Value &thisValue, const jsi::Value *arguments, size_t count) -> jsi::Value
+            {
+            if(count < 1) return jsi::Value::undefined();
+            std::string landmarkType = arguments[0].asString(runtime).utf8(runtime);
+            return landmarkOfType(landmarkType).toJSIObject(runtime);
+        });
+    }
+
     return jsi::Value::undefined();
 }
 static std::vector<std::string> nativeMLKPoseHostObjectKeys = {
@@ -72,28 +70,24 @@ std::vector<facebook::jsi::PropNameID> SKRNMLKitPoseDetectionMLKPose::getPropert
 
 facebook::jsi::Value SKRNMLKitPoseDetector::get(facebook::jsi::Runtime &runtime, const facebook::jsi::PropNameID &name) {
     std::string methodName = name.utf8(runtime);
-    long long methodSwitch = string_hash(methodName.c_str());
-    switch (methodSwitch) {
 #ifdef HAS_SKRN_NATIVE_VIDEO
-        case "process"_sh:{
-            return jsi::Function::createFromHostFunction(runtime, name, 1, [&](jsi::Runtime &runtime, const jsi::Value &thisValue, const jsi::Value *arguments,
-                                                                               size_t count) -> jsi::Value
-                                                         {
-                if(count < 1) {
-                    throw jsi::JSError(runtime, "1 argument is expected for `process`");
-                }
-                std::shared_ptr<SKRNNativeVideo::SKNativeFrameWrapper> obj = arguments[0].asObject(runtime).asHostObject<SKRNNativeVideo::SKNativeFrameWrapper>(runtime);
-                std::vector<std::shared_ptr<SKRNMLKitPoseDetectionMLKPose>> results = process(obj);
-                jsi::Array ret = jsi::Array(runtime, results.size());
-                for(int i = 0; i < results.size(); i++) {
-                    ret.setValueAtIndex(runtime, i, jsi::Object::createFromHostObject(runtime, results[i]));
-                }
-                return ret;
-            });
-        } break;
-#endif
-        default: return jsi::Value::undefined();
+    if (methodSwitch == methodName) {
+        return jsi::Function::createFromHostFunction(runtime, name, 1, [&](jsi::Runtime &runtime, const jsi::Value &thisValue, const jsi::Value *arguments,
+                                                                            size_t count) -> jsi::Value
+                                                        {
+            if(count < 1) {
+                throw jsi::JSError(runtime, "1 argument is expected for `process`");
+            }
+            std::shared_ptr<SKRNNativeVideo::SKNativeFrameWrapper> obj = arguments[0].asObject(runtime).asHostObject<SKRNNativeVideo::SKNativeFrameWrapper>(runtime);
+            std::vector<std::shared_ptr<SKRNMLKitPoseDetectionMLKPose>> results = process(obj);
+            jsi::Array ret = jsi::Array(runtime, results.size());
+            for(int i = 0; i < results.size(); i++) {
+                ret.setValueAtIndex(runtime, i, jsi::Object::createFromHostObject(runtime, results[i]));
+            }
+            return ret;
+        });
     }
+#endif
     return jsi::Value::undefined();
 }
 static std::vector<std::string> nativeSKRNMLKitPoseDetectorKeys = {
